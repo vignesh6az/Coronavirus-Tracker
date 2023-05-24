@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+<script>
+  const ctx = document.getElementById('myChart');
+  getChartData();
+  async function getChartData()
+  {
+	  countries=[];
+	  deathCount=[];
+	  const response=await fetch("http://localhost:8082/collectChartData");
+	  const data=await response.json();
+	  console.log(data);
+	  console.log("Barchart Length="+data.length);
+	  for(i=0;i<data.length;i++){
+		  countries.push(data[i].country);
+		  deathCount.push(data[i].latestTotalDeaths);
+	  }
+	  console.log(countries);
+	  console.log(deathCount);
+	  new Chart(ctx, {
+		    type: 'bar',
+		    data: {
+		      labels: countries,
+		      datasets: [{
+		        label: 'Death Count',
+		        backgroundColor:['red','green','blue','purple','yellow','orange'],
+		        data: deathCount
+		      }]
+		    },
+		    options: {
+		        scales: {
+		            y: {
+		                suggestedMin: 1000,
+		                suggestedMax: 1000000
+		            }
+		        }
+		    }
+		  });  
+  }
+  
+</script>
+</body>
+</html>
